@@ -1,0 +1,51 @@
+﻿
+@using WebShop.Models.ViewModels
+@model IEnumerable<OrderViewModel>
+
+@{
+	ViewData["Title"] = "Orders";
+}
+
+<h1>Orders</h1>
+<div>
+	<a class="btn btn-primary" asp-controller="Product" asp-action="Index">Shop</a>
+</div>
+													 
+<div>
+ @{
+      Html.RenderPartial("ConfirmationPartial");   
+  }
+</div>
+
+<p>
+	<a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.OrderDate)
+				@Html.DisplayNameFor(model => model.TotalPrice)
+				@Html.DisplayNameFor(model => model.AppUserId)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.OrderDate)
+					@Html.DisplayFor(modelItem => item.TotalPrice)
+					@Html.DisplayFor(modelItem => item.AppUserId)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

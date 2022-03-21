@@ -1,0 +1,50 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.card {
+    width: 18%;
+    display: inline-block;
+    background-color: #AC8383;
+    background-image: linear-gradient(160deg, white 0%, #AC8383 100%);
+}
+
+#cardBottom {
+    border-top: solid;
+    border-color: #442121;
+}
+
+.form-range::-moz-range-thumb {
+    background-color: #442121;
+}
+
+.form-range::-moz-range-track {
+    background-color: #AC8383;
+}
+
+.btn {
+    background-color: #442121;
+    color: white;
+    border: none;
+}
+
+.container {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1rem;
+}

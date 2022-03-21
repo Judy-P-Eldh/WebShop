@@ -1,0 +1,37 @@
+﻿@using WebShop.Models.ViewModels
+@model IEnumerable<ProductViewModel>
+
+@{
+	ViewData["Title"] = "Plant Shop";
+}
+
+<h1>Welcome to the Plant Shop</h1>
+<p>Become a member to recieve offers and special prices.</p>
+
+<div>
+    <a class="btn btn-primary" asp-controller="Order" asp-action="Index">See Orders</a>
+</div>
+
+<div id="shopItems" class="container row">
+	@foreach (var plant in Model)
+	{
+		<div class="card">
+			<img src="@plant.Image" class="card-img-top" alt="plant">
+			<div class="card-body">
+				<h5 class="card-title">@plant.Title </h5>
+				<p class="card-text">@plant.Description</p>
+				 <div id="cardBottom">
+				<p>Category: @plant.Category.Name.<br/> Size: @plant.Size.Size.</p>
+				<p id="plantPrice">@plant.Price kr.</p>
+					<label for="amountRange" class="form-label">Amount</label>
+					<label id="plantAmount">1</label>
+					<input id="plantAmountRange" type="range" class="form-range" min="1" max="5" step="0.5" id="amountRange">
+				<a asp-controller="Order" asp-action="Buy" asp-route-id="@plant.Id" class="btn btn-primary">Add to cart</a>
+				
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+
