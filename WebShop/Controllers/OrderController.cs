@@ -18,6 +18,7 @@ namespace WebShop.Controllers
         {
             var orders = db.Orders.Select(o => new OrderViewModel
             {
+                Id = o.Id,
                 OrderDate = o.OrderDate,
                 TotalPrice = o.TotalPrice,
                 //AppUserId = o.AppUserId,
@@ -83,8 +84,9 @@ namespace WebShop.Controllers
 
             return View(viewModel);
         }
-        //[HttpDelete]
-        public IActionResult Delete(int id)
+
+        
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -92,9 +94,10 @@ namespace WebShop.Controllers
             }
 
             var order = db.Orders.FirstOrDefault(p => p.Id == id);
-            db.Orders.Remove(order);  //Tas inte bort?
+            db.Orders.Remove(order);
+            await db.SaveChangesAsync();
 
-            return View(nameof(Index)); 
+            return RedirectToAction(nameof(Index)); 
         }
     }
 }
