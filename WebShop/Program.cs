@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using WebShop.Data;
 using WebShop.Extensions;
+using WebShop.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<ProductOrderRepository>();
+builder.Services.AddScoped<OrderRepository>();
+
+
 builder.Services.AddControllersWithViews();
 
   var app = builder.Build();

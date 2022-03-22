@@ -3,20 +3,26 @@ using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
 using WebShop.Models.Enteties;
 using WebShop.Models.ViewModels;
+using WebShop.Repositories;
 
 namespace WebShop.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly ApplicationDbContext db;
+        private readonly OrderRepository orderRepository;
+        private readonly ProductRepository productRepository;
+        private readonly ProductOrderRepository productOrderRepository;
 
-        public OrderController(ApplicationDbContext db)
+        public OrderController(OrderRepository orderRepository, ProductRepository productRepository, ProductOrderRepository productOrderRepository)
         {
-            this.db = db;
+            this.orderRepository = orderRepository;
+            this.productRepository = productRepository;
+            this.productOrderRepository = productOrderRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var orders = db.Orders.Select(o => new OrderViewModel
+            var oredersFromRepo = await orderRepository.GetAllOrdersAsync();
+            var orders = oredersFromRepo.Select(o => new OrderViewModel
             {
                 Id = o.Id,
                 OrderDate = o.OrderDate,
@@ -50,7 +56,7 @@ namespace WebShop.Controllers
                 return View("Error");
             }
             
-            var product = db.Products.FirstOrDefault(p => p.Id == id);
+            var product = await productRepository.GetProductByIdAsync(id);
 
             amount = 2;
             var price = product.Price;
@@ -68,34 +74,37 @@ namespace WebShop.Controllers
                 ProductId = id
             });
 
-            db.Add(order);
-            db.Add(productOrder);
+            orderRepository.AddOrder(order);
+            productOrderRepository.AddProductOrder(productOrder);
 
-            await db.SaveChangesAsync();
+            orderRepository.SaveChanges();
 
-            var orders =  await db.Orders.ToListAsync();
-            var viewModel = orders.Select(o => new OrderViewModel
-            {   
+            var ordersFromRepo = await orderRepository.GetAllOrdersAsync();
+            var viewModel = ordersFromRepo.Select(o => new OrderViewModel()
+            {
                 Id = o.Id,
                 OrderDate = o.OrderDate,
                 TotalPrice = totalPrice,
                 ProductOrders = o.ProductOrders
-            }).ToList();
+            });//.ToListAsync();
 
             return View(viewModel);
         }
 
         
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 throw new Exception("Nothing to delete.");
             }
 
-            var order = db.Orders.FirstOrDefault(p => p.Id == id);
-            db.Orders.Remove(order);
-            await db.SaveChangesAsync();
+            var order = await orderRepository.GetOrderById((int)id);
+
+            if (order is null) return NotFound();
+
+            orderRepository.RemoveOrder(order);
+            orderRepository.SaveChanges();
 
             return RedirectToAction(nameof(Index)); 
         }

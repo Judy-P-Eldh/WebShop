@@ -1,10 +1,10 @@
-﻿namespace WebShop.Models.Enteties
+﻿
+namespace WebShop.Models.Enteties
 {
     public class PlantCategory
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Product> Products { get; set; }
     }
 }

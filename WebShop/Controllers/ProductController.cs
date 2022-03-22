@@ -3,20 +3,27 @@ using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
 using WebShop.Models.Enteties;
 using WebShop.Models.ViewModels;
+using WebShop.Repositories;
 
 namespace WebShop.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext db;
-        
-        public ProductController(ApplicationDbContext db)
+        private readonly ProductRepository productRepository;
+        private readonly ProductOrderRepository productOrderRepository;
+        private readonly OrderRepository orderRepository;
+
+        public ProductController(ProductRepository productRepository, ProductOrderRepository productOrderRepository, OrderRepository orderRepository)
         {
-            this.db = db;
+            this.productRepository = productRepository;
+            this.productOrderRepository = productOrderRepository;
+            this.orderRepository = orderRepository;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-           var products = db.Products.Select(p => new ProductViewModel 
+            var products = await productRepository.GetAllProductsAsync();
+            var viewModel = products.Select(p => new ProductViewModel 
            {
               Id = p.Id,
               Title = p.Title,
@@ -28,7 +35,7 @@ namespace WebShop.Controllers
 
            }).ToList();
 
-            return View(products);
+            return View(viewModel);
         }
     }
 }
