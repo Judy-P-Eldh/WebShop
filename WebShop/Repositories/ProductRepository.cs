@@ -5,7 +5,7 @@ using WebShop.Models.Enteties;
 
 namespace WebShop.Repositories
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private ApplicationDbContext db;
 

@@ -9,19 +9,22 @@ namespace WebShop.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly OrderRepository orderRepository;
-        private readonly ProductRepository productRepository;
-        private readonly ProductOrderRepository productOrderRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public OrderController(OrderRepository orderRepository, ProductRepository productRepository, ProductOrderRepository productOrderRepository)
+        //private readonly OrderRepository orderRepository;
+        //private readonly ProductRepository productRepository;
+        //private readonly ProductOrderRepository productOrderRepository;
+
+        public OrderController(IUnitOfWork unitOfWork)
         {
-            this.orderRepository = orderRepository;
-            this.productRepository = productRepository;
-            this.productOrderRepository = productOrderRepository;
+            this.unitOfWork = unitOfWork;
+            //this.orderRepository = orderRepository;
+            //this.productRepository = productRepository;
+            //this.productOrderRepository = productOrderRepository;
         }
         public async Task<IActionResult> Index()
         {
-            var oredersFromRepo = await orderRepository.GetAllOrdersAsync();
+            var oredersFromRepo = await unitOfWork.OrderRepository.GetAllOrdersAsync();
             var orders = oredersFromRepo.Select(o => new OrderViewModel
             {
                 Id = o.Id,
@@ -56,7 +59,7 @@ namespace WebShop.Controllers
                 return View("Error");
             }
             
-            var product = await productRepository.GetProductByIdAsync(id);
+            var product = await unitOfWork.ProductRepository.GetProductByIdAsync(id);
 
             amount = 2;
             var price = product.Price;
@@ -74,12 +77,12 @@ namespace WebShop.Controllers
                 ProductId = id
             });
 
-            orderRepository.AddOrder(order);
-            productOrderRepository.AddProductOrder(productOrder);
+            unitOfWork.OrderRepository.AddOrder(order);
+            unitOfWork.ProductOrderRepository.AddProductOrder(productOrder);
 
-            orderRepository.SaveChanges();
+            await unitOfWork.CompleteAsync();
 
-            var ordersFromRepo = await orderRepository.GetAllOrdersAsync();
+            var ordersFromRepo = await unitOfWork.OrderRepository.GetAllOrdersAsync();
             var viewModel = ordersFromRepo.Select(o => new OrderViewModel()
             {
                 Id = o.Id,
@@ -99,12 +102,12 @@ namespace WebShop.Controllers
                 throw new Exception("Nothing to delete.");
             }
 
-            var order = await orderRepository.GetOrderById((int)id);
+            var order = await unitOfWork.OrderRepository.GetOrderById((int)id);
 
             if (order is null) return NotFound();
 
-            orderRepository.RemoveOrder(order);
-            orderRepository.SaveChanges();
+            unitOfWork.OrderRepository.RemoveOrder(order);
+            await unitOfWork.CompleteAsync();
 
             return RedirectToAction(nameof(Index)); 
         }

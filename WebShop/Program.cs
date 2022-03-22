@@ -17,10 +17,11 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<ProductRepository>();
-builder.Services.AddScoped<ProductOrderRepository>();
-builder.Services.AddScoped<OrderRepository>();
+//builder.Services.AddScoped<ProductRepository>();
+//builder.Services.AddScoped<ProductOrderRepository>();
+//builder.Services.AddScoped<OrderRepository>();
 
+builder.Services.AddScoped<IUnitOfWork>();
 
 builder.Services.AddControllersWithViews();
 

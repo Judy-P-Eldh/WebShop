@@ -9,20 +9,23 @@ namespace WebShop.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ProductRepository productRepository;
-        private readonly ProductOrderRepository productOrderRepository;
-        private readonly OrderRepository orderRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ProductController(ProductRepository productRepository, ProductOrderRepository productOrderRepository, OrderRepository orderRepository)
+        //private readonly ProductRepository productRepository;
+        //private readonly ProductOrderRepository productOrderRepository;
+        //private readonly OrderRepository orderRepository;
+
+        public ProductController(IUnitOfWork unitOfWork)
         {
-            this.productRepository = productRepository;
-            this.productOrderRepository = productOrderRepository;
-            this.orderRepository = orderRepository;
+            this.unitOfWork = unitOfWork;
+            //this.productRepository = productRepository;
+            //this.productOrderRepository = productOrderRepository;
+            //this.orderRepository = orderRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var products = await productRepository.GetAllProductsAsync();
+            var products = await unitOfWork.ProductRepository.GetAllProductsAsync();
             var viewModel = products.Select(p => new ProductViewModel 
            {
               Id = p.Id,

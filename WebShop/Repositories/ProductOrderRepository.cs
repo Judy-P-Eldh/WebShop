@@ -3,7 +3,7 @@ using WebShop.Models.Enteties;
 
 namespace WebShop.Repositories
 {
-    public class ProductOrderRepository
+    public class ProductOrderRepository : IProductOrderRepository
     {
         private readonly ApplicationDbContext db;
 

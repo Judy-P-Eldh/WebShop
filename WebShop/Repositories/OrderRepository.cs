@@ -5,7 +5,7 @@ using WebShop.Models.Enteties;
 
 namespace WebShop.Repositories
 {
-    public class OrderRepository
+    public class OrderRepository : IOrderRepository
     {
         private readonly ApplicationDbContext db;
 
@@ -24,20 +24,20 @@ namespace WebShop.Repositories
             return await db.Orders.FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async void AddOrder(Order order)
+        public void AddOrder(Order order)
         {
             db.Orders.Add(order);
-            
+
         }
         public void RemoveOrder(Order order)
         {
-            db.Orders.Remove(order);        
-            
+            db.Orders.Remove(order);
+
         }
         public void SaveChanges()
         {
             db.SaveChanges();
         }
-        
+
     }
 }
