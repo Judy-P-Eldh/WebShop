@@ -52,7 +52,7 @@ namespace WebShop.Controllers
         //    return View(viewModel);
         //}
 
-        public async Task<IActionResult> Buy(int id, int amount)
+        public async Task<IActionResult> Buy(int? id, int amount)
         {
             if (id == null)
             {
