@@ -41,6 +41,8 @@ body {
     padding-bottom: 0,5rem;
     border-top: solid;
     border-color: #442121;
+    /*margin-top: 2rem;*/
+    margin-bottom: 1rem;
 }
 
 .form-range::-moz-range-thumb {
@@ -63,3 +65,8 @@ body {
         border-color: #AC8383;
     }
 
+.container {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1rem;
+}

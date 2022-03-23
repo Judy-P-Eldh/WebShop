@@ -52,14 +52,14 @@ namespace WebShop.Controllers
         //    return View(viewModel);
         //}
 
-        public async Task<IActionResult> Buy(int id, int amount)
+        public async Task<IActionResult> Buy(int? id, int amount)
         {
             if (id == null)
             {
                 return View("Error");
             }
             
-            var product = await unitOfWork.ProductRepository.GetProductByIdAsync(id);
+            var product = await unitOfWork.ProductRepository.GetProductByIdAsync((int)id);
 
             amount = 2;
             var price = product.Price;
@@ -68,14 +68,15 @@ namespace WebShop.Controllers
             var order = new Order()
             {
                 OrderDate = DateTime.Now,
-                TotalPrice = totalPrice
+                TotalPrice = totalPrice,
+                //AppUserId = 
             };
-            var productOrder = (new ProductOrder()
+            var productOrder = new ProductOrder()
             {
                 Order = order,
                 Amount = amount,
-                ProductId = id
-            });
+                ProductId = (int)id
+            };
 
             unitOfWork.OrderRepository.AddOrder(order);
             unitOfWork.ProductOrderRepository.AddProductOrder(productOrder);
