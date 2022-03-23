@@ -2,11 +2,11 @@ html {
     font-size: 14px;
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
     html {
         font-size: 16px;
     }
-}
+}*/
 
 html {
     position: relative;
@@ -17,14 +17,28 @@ body {
     margin-bottom: 60px;
 }
 
-.card {
-    width: 18%;
-    display: inline-block;
-    background-color: #AC8383;
-    background-image: linear-gradient(160deg, white 0%, #AC8383 100%);
+
+#shopItems {
+    gap: 1rem;
+    /*justify-content: flex-start;*/
+    /*display: inline-flex;*/
 }
 
+.card {
+    width:35%;
+    display: inline-block;
+    background-color: #AC8383;
+    background-image: linear-gradient(160deg, white 0%, #AC8383 150%);
+}
+
+.card-img-top {
+    height: 30%;
+}
+
+
 #cardBottom {
+    height: 40%;
+    padding-bottom: 0,5rem;
     border-top: solid;
     border-color: #442121;
 }
@@ -42,9 +56,10 @@ body {
     color: white;
     border: none;
 }
+    .btn:hover {
+        background-color: white;
+        color: #442121;
+        border: solid;
+        border-color: #AC8383;
+    }
 
-.container {
-    justify-content: flex-start;
-    width: 100%;
-    gap: 1rem;
-}
