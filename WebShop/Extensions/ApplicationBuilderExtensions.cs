@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
+using WebShop.Models.Enteties;
 
 namespace WebShop.Extensions
 {
@@ -13,13 +14,14 @@ namespace WebShop.Extensions
                 var serviceProvider = scope.ServiceProvider;
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
                 var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
 
                 //db.Database.EnsureDeleted();
                 //db.Database.Migrate();
 
                 try
                 {
-                    await SeedData.InitAsync(db, serviceProvider);
+                    await SeedData.InitAsync(db, serviceProvider, roleManager, userManager);
                 }
                 catch (Exception e)
                 {

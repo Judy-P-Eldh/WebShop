@@ -9,10 +9,22 @@ namespace WebShop.Data
         private static List<PlantCategory> categories = new List<PlantCategory>();
         private static List<PlantSize> size;
         private static RoleManager<IdentityRole> roleManager = default!;
+        private static UserManager<AppUser> userManager = default!;
 
-        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service)
+        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service, RoleManager<IdentityRole> rolemanager, UserManager<AppUser> userManager)
         {
             if (await db.Products.AnyAsync()) return;
+
+            roleManager = rolemanager;
+            var res = await userManager.CreateAsync(new AppUser 
+            {
+                RegisterDate = DateTime.Now,
+                Name = "P",
+                Email = "admin@admin.se",
+            });
+
+
+           // var rm = service.GetRequiredService<RoleManager<IdentityRole>>();
 
             var plants = GetPlantCategory();
             await db.AddRangeAsync(plants);
