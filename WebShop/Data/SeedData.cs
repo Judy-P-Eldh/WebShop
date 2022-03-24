@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WebShop.Models.Enteties;
 
 namespace WebShop.Data
@@ -7,17 +8,20 @@ namespace WebShop.Data
     {
         private static List<PlantCategory> categories = new List<PlantCategory>();
         private static List<PlantSize> size;
+        private static RoleManager<IdentityRole> roleManager = default!;
 
         public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service)
         {
             if (await db.Products.AnyAsync()) return;
 
             var plants = GetPlantCategory();
-            await db.AddRangeAsync(plants);   
+            await db.AddRangeAsync(plants);
             size = GetPlantSize();
             await db.AddRangeAsync(size);
             var prod = GetProducts();
             await db.AddRangeAsync(prod);
+            var roleNames = new[] { "Staff", "Customer" };
+            await AddRolesAsync(roleNames);
 
             await db.SaveChangesAsync();
         }
@@ -136,6 +140,20 @@ namespace WebShop.Data
                  new PlantCategory{ Name = "Flowering"}
             };
             return categories;
+        }
+
+        private static async Task AddRolesAsync(string[] roleNames)
+        {
+            if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
+
+            foreach (var roleName in roleNames)
+            {
+                if (await roleManager.RoleExistsAsync(roleName)) continue;
+                var role = new IdentityRole { Name = roleName };
+                var result = await roleManager.CreateAsync(role);
+
+                if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
 
 namespace WebShop.Extensions
@@ -11,6 +12,7 @@ namespace WebShop.Extensions
             {
                 var serviceProvider = scope.ServiceProvider;
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
                 //db.Database.EnsureDeleted();
                 //db.Database.Migrate();
