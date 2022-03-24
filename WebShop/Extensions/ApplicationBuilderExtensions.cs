@@ -17,7 +17,7 @@ namespace WebShop.Extensions
 
                 try
                 {
-                    await SeedData.InitAsync(db);
+                    await SeedData.InitAsync(db, serviceProvider);
                 }
                 catch (Exception e)
                 {

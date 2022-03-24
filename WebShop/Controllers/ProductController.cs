@@ -25,9 +25,13 @@ namespace WebShop.Controllers
 
         public async Task<IActionResult> Index()
         {
+            //if (User.IsInRole("Staff"))
+            //{
+
+            //}
             var products = await unitOfWork.ProductRepository.GetAllProductsAsync();
             var viewModel = products.Select(p => new ProductViewModel 
-           {
+            {
               Id = p.Id,
               Title = p.Title,
               Description = p.Description,

@@ -8,7 +8,7 @@ namespace WebShop.Data
         private static List<PlantCategory> categories = new List<PlantCategory>();
         private static List<PlantSize> size;
 
-        public static async Task InitAsync(ApplicationDbContext db)
+        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service)
         {
             if (await db.Products.AnyAsync()) return;
 
