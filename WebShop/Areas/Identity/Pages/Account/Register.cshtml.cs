@@ -71,8 +71,8 @@ namespace WebShop.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            [DataType(DataType.DateTime)]
-            public DateTime RegisterDate { get; set; }   = DateTime.Now;
+            //[DataType(DataType.DateTime)]
+            //public DateTime RegisterDate { get; set; }   = DateTime.Now;
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
@@ -125,6 +125,9 @@ namespace WebShop.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                user.Name = Input.Name;
+                user.RegisterDate = DateTime.Now;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
