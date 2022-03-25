@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
 using WebShop.Models.Enteties;
@@ -44,5 +45,21 @@ namespace WebShop.Controllers
 
             return View(viewModel);
         }
+
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            if(User.IsInRole("Staff"))
+            {
+                return View();
+            }
+            if(User.IsInRole("Customer"))
+            {
+                RedirectToAction(nameof(Index));
+            }
+
+            return View();
+        }
+
     }
 }

@@ -16,13 +16,14 @@ namespace WebShop.Data
             if (await db.Products.AnyAsync()) return;
 
             roleManager = rolemanager;
-            var res = await userManager.CreateAsync(new AppUser 
+            var admin = await userManager.CreateAsync(new AppUser 
             {
                 RegisterDate = DateTime.Now,
                 Name = "P",
                 Email = "admin@admin.se"
             });
 
+           // var test = userManager.AddToRoleAsync(res, "Staff");
            // var rm = service.GetRequiredService<RoleManager<IdentityRole>>();
 
             var plants = GetPlantCategory();
@@ -35,6 +36,32 @@ namespace WebShop.Data
             await AddRolesAsync(roleNames);
 
             await db.SaveChangesAsync();
+        }
+
+        private static async Task AddRolesAsync(string[] roleNames)
+        {
+            if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
+
+            foreach (var roleName in roleNames)
+            {
+                if (await roleManager.RoleExistsAsync(roleName)) continue;
+                var role = new IdentityRole { Name = roleName };
+                var result = await roleManager.CreateAsync(role);
+
+                if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+            }
+        }
+
+        private static async Task AddToRolesAsync(AppUser admin, string[] roleNames)
+        {
+            if (admin is null) throw new NullReferenceException(nameof(admin));
+
+            foreach (var role in roleNames)
+            {
+                if (await userManager.IsInRoleAsync(admin, role)) continue;
+                var result = await userManager.AddToRoleAsync(admin, role);
+                if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+            }
         }
 
         private static List<Product> GetProducts()
@@ -153,18 +180,6 @@ namespace WebShop.Data
             return categories;
         }
 
-        private static async Task AddRolesAsync(string[] roleNames)
-        {
-            if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
-
-            foreach (var roleName in roleNames)
-            {
-                if (await roleManager.RoleExistsAsync(roleName)) continue;
-                var role = new IdentityRole { Name = roleName };
-                var result = await roleManager.CreateAsync(role);
-
-                if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
-            }
-        }
+        
     }
 }
