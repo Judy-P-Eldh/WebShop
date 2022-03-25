@@ -21,6 +21,8 @@ namespace WebShop.Extensions
 
                 try
                 {
+                    if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
+                    if (userManager is null) throw new NullReferenceException(nameof(UserManager<AppUser>));
                     await SeedData.InitAsync(db, serviceProvider, roleManager, userManager);
                 }
                 catch (Exception e)

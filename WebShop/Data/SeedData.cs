@@ -20,9 +20,8 @@ namespace WebShop.Data
             {
                 RegisterDate = DateTime.Now,
                 Name = "P",
-                Email = "admin@admin.se",
+                Email = "admin@admin.se"
             });
-
 
            // var rm = service.GetRequiredService<RoleManager<IdentityRole>>();
 
