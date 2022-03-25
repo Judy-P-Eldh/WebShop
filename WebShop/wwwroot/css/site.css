@@ -24,12 +24,11 @@ body {
     /*display: inline-flex;*/
     display: flex;
     height: 100%;
-   
     /*flex-wrap: wrap;*/
 }
 
 .card {
-    width: 25%;
+    width: 20%;
     /*display: flex;*/
     /*flex-direction: column;*/
     /*margin: 0.5%;*/
@@ -38,7 +37,7 @@ body {
 }
 
 .card-img-top {
-    height: 35%;
+    height: 30%;
 }
 
 .card-text {
@@ -46,7 +45,7 @@ body {
 }
 
 #cardBottom {
-    /*height: 20%;*/
+   /* height:30%;*/
 /*    padding-bottom: 0,5rem;
 */
     margin-bottom:   1rem;
