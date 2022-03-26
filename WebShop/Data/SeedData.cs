@@ -31,32 +31,32 @@ namespace WebShop.Data
             await db.AddRangeAsync(prod);
             var roleNames = new[] { "Staff", "Customer" };
             await AddRolesAsync(roleNames);
-            await AddToRolesAsync(admin, "Staff");
+            //await AddToRolesAsync(admin, "Staff");
             
 
 
             await db.SaveChangesAsync();
         }
 
-        private static async Task<AppUser> AddAdminAsync(string Email, string PW)
-        {
-            var found = await userManager.FindByEmailAsync(Email);
+        //private static async Task<AppUser> AddAdminAsync(string Email, string PW)
+        //{
+        //    var found = await userManager.FindByEmailAsync(Email);
 
-            if (found != null) return null!;
-            var admin = await userManager.CreateAsync(new AppUser
-            {
-                RegisterDate = DateTime.Now,
-                Name = "P",
-                Email = "admin@admin.se",
-                PW = "abc123"
-            });
+        //    if (found != null) return null!;
+        //    var admin = await userManager.CreateAsync(new AppUser
+        //    {
+        //        RegisterDate = DateTime.Now,
+        //        Name = "P",
+        //        Email = "admin@admin.se",
+        //        PW = "abc123"
+        //    });
 
 
-            var result = await userManager.CreateAsync(admin, PW);
-            if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+        //    var result = await userManager.CreateAsync(admin, PW);
+        //    if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
 
-            return admin;
-        }
+        //    return admin;
+        //}
 
         private static async Task AddRolesAsync(string[] roleNames)
         {
