@@ -22,11 +22,15 @@ body {
     gap: 1rem;
     /*justify-content: flex-start;*/
     /*display: inline-flex;*/
+    display: flex;
+    height: 100%;
+    /*flex-wrap: wrap;*/
 }
 
 .card {
-    width:35%;
-    display: inline-block;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
     background-color: #AC8383;
     background-image: linear-gradient(160deg, white 0%, #AC8383 150%);
 }
@@ -35,14 +39,18 @@ body {
     height: 30%;
 }
 
+/*.card-text {
+    flex-grow: 0.5;
+}*/
 
 #cardBottom {
-    height: 40%;
-    padding-bottom: 0,5rem;
+   /* height:30%;*/
+    /*padding-bottom: 0,5rem;*/
+
+    margin-bottom: 1rem;
     border-top: solid;
     border-color: #442121;
-    /*margin-top: 2rem;*/
-    margin-bottom: 1rem;
+    /*margin-top: auto;*/
 }
 
 .form-range::-moz-range-thumb {
@@ -54,9 +62,10 @@ body {
 }
 
 .btn {
-    background-color: #442121;
-    color: white;
-    border: none;
+    background-color: #d4bfbf;
+    color: #442121;
+    border-color: #442121;
+    border-radius: 0.5rem;
 }
     .btn:hover {
         background-color: white;
