@@ -22,6 +22,7 @@ namespace WebShop.Controllers
             //this.productRepository = productRepository;
             //this.productOrderRepository = productOrderRepository;
         }
+        
         public async Task<IActionResult> Index()
         {
             var oredersFromRepo = await unitOfWork.OrderRepository.GetAllOrdersAsync();
@@ -30,7 +31,7 @@ namespace WebShop.Controllers
                 Id = o.Id,
                 OrderDate = o.OrderDate,
                 TotalPrice = o.TotalPrice,
-                //AppUserId = o.AppUserId,
+                AppUserId = o.AppUserId,
                 ProductOrders = o.ProductOrders
 
             }).ToList();
@@ -90,12 +91,11 @@ namespace WebShop.Controllers
                 OrderDate = o.OrderDate,
                 TotalPrice = totalPrice,
                 ProductOrders = o.ProductOrders
-            });//.ToListAsync();
+            });
 
             return View(viewModel);
         }
 
-        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

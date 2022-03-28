@@ -74,7 +74,7 @@ namespace WebShop.Data
 
         private static async Task AddToRolesAsync(AppUser admin, string[] roleNames)
         {
-            if (admin is null) throw new NullReferenceException(nameof(admin));
+            if (admin is null) return; /*throw new NullReferenceException(nameof(admin));*/
 
             foreach (var role in roleNames)
             {
