@@ -15,10 +15,10 @@ namespace WebShop.Data
         {
             if (await db.Products.AnyAsync()) return;
 
-            var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+            roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
             if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
 
-            var userManager = service.GetRequiredService<UserManager<AppUser>>();
+            userManager = service.GetRequiredService<UserManager<AppUser>>();
             if (userManager is null) throw new NullReferenceException(nameof(UserManager<AppUser>));
 
             var roleNames = new[] { "Staff", "Customer" };
