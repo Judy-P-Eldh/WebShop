@@ -13,17 +13,17 @@ namespace WebShop.Extensions
             {
                 var serviceProvider = scope.ServiceProvider;
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
-                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                var config = serviceProvider.GetRequiredService<IConfiguration>();
 
                 //db.Database.EnsureDeleted();
                 //db.Database.Migrate();
 
+                var adminPW = config["AdminPW"];
+
                 try
                 {
-                    if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
-                    if (userManager is null) throw new NullReferenceException(nameof(UserManager<AppUser>));
-                    await SeedData.InitAsync(db, serviceProvider, roleManager, userManager);
+                   
+                    await SeedData.InitAsync(db, serviceProvider, adminPW);
                 }
                 catch (Exception e)
                 {

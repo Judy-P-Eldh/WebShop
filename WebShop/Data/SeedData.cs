@@ -11,17 +11,18 @@ namespace WebShop.Data
         private static RoleManager<IdentityRole> roleManager = default!;
         private static UserManager<AppUser> userManager = default!;
 
-        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service, RoleManager<IdentityRole> rolemanager, UserManager<AppUser> userManager)
+        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service, string adminPW)
         {
             if (await db.Products.AnyAsync()) return;
 
-            roleManager = rolemanager;
-           
-             //TODO: Använd service istället. Hur funkar det i Extensions?
+            var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+            if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
 
+            var userManager = service.GetRequiredService<UserManager<AppUser>>();
+            if (userManager is null) throw new NullReferenceException(nameof(UserManager<AppUser>));
 
-            // var test = userManager.AddToRoleAsync(res, "Staff");
-            // var rm = service.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleNames = new[] { "Staff", "Customer" };
+            var Email = "admin@admin.se";
 
             var plants = GetPlantCategory();
             await db.AddRangeAsync(plants);
@@ -29,34 +30,30 @@ namespace WebShop.Data
             await db.AddRangeAsync(size);
             var prod = GetProducts();
             await db.AddRangeAsync(prod);
-            var roleNames = new[] { "Staff", "Customer" };
+            var admin = await AddAdminAsync(Email, adminPW);
             await AddRolesAsync(roleNames);
-            //await AddToRolesAsync(admin, "Staff");
-            
-
+            await AddToRolesAsync(admin, roleNames);
 
             await db.SaveChangesAsync();
         }
 
-        //private static async Task<AppUser> AddAdminAsync(string Email, string PW)
-        //{
-        //    var found = await userManager.FindByEmailAsync(Email);
+        private static async Task<AppUser> AddAdminAsync(string Email, string PW)
+        {
+            var found = await userManager.FindByEmailAsync(Email);      //FEL
 
-        //    if (found != null) return null!;
-        //    var admin = await userManager.CreateAsync(new AppUser
-        //    {
-        //        RegisterDate = DateTime.Now,
-        //        Name = "P",
-        //        Email = "admin@admin.se",
-        //        PW = "abc123"
-        //    });
+            if (found != null) return null!;
+            var admin = new AppUser
+            {
+                RegisterDate = DateTime.Now,
+                Name = "P",
+                Email = "admin@admin.se",
+            };
 
+            var result = await userManager.CreateAsync(admin, PW);
+            if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
 
-        //    var result = await userManager.CreateAsync(admin, PW);
-        //    if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
-
-        //    return admin;
-        //}
+            return admin;
+        }
 
         private static async Task AddRolesAsync(string[] roleNames)
         {
