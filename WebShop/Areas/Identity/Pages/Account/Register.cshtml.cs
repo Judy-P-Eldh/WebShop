@@ -128,8 +128,6 @@ namespace WebShop.Areas.Identity.Pages.Account
 
                 user.Name = Input.Name;
                 user.RegisterDate = DateTime.Now;
-                //user.Email = Input.Email;
-     
                
                                                     
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
