@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
+using WebShop.Models.Enteties;
 
 namespace WebShop.Extensions
 {
@@ -11,13 +13,17 @@ namespace WebShop.Extensions
             {
                 var serviceProvider = scope.ServiceProvider;
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
+                var config = serviceProvider.GetRequiredService<IConfiguration>();
 
                 //db.Database.EnsureDeleted();
                 //db.Database.Migrate();
 
+                var adminPW = config["AdminPW"];
+
                 try
                 {
-                    await SeedData.InitAsync(db, serviceProvider);
+                   
+                    await SeedData.InitAsync(db, serviceProvider, adminPW);
                 }
                 catch (Exception e)
                 {

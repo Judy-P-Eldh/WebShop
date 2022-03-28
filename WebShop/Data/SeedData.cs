@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WebShop.Models.Enteties;
 
 namespace WebShop.Data
@@ -7,19 +8,77 @@ namespace WebShop.Data
     {
         private static List<PlantCategory> categories = new List<PlantCategory>();
         private static List<PlantSize> size;
+        private static RoleManager<IdentityRole> roleManager = default!;
+        private static UserManager<AppUser> userManager = default!;
 
-        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service)
+        public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service, string adminPW)
         {
             if (await db.Products.AnyAsync()) return;
 
+            roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+            if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
+
+            userManager = service.GetRequiredService<UserManager<AppUser>>();
+            if (userManager is null) throw new NullReferenceException(nameof(UserManager<AppUser>));
+
+            var roleNames = new[] { "Staff", "Customer" };
+            var Email = "admin@admin.se";
+
             var plants = GetPlantCategory();
-            await db.AddRangeAsync(plants);   
+            await db.AddRangeAsync(plants);
             size = GetPlantSize();
             await db.AddRangeAsync(size);
             var prod = GetProducts();
             await db.AddRangeAsync(prod);
+            var admin = await AddAdminAsync(Email, adminPW);
+            await AddRolesAsync(roleNames);
+            await AddToRolesAsync(admin, roleNames);
 
             await db.SaveChangesAsync();
+        }
+
+        private static async Task<AppUser> AddAdminAsync(string Email, string PW)
+        {
+            var found = await userManager.FindByEmailAsync(Email);      //FEL
+
+            if (found != null) return null!;
+            var admin = new AppUser
+            {
+                RegisterDate = DateTime.Now,
+                Name = "P",
+                Email = "admin@admin.se",
+            };
+
+            var result = await userManager.CreateAsync(admin, PW);
+            if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+
+            return admin;
+        }
+
+        private static async Task AddRolesAsync(string[] roleNames)
+        {
+            if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
+
+            foreach (var roleName in roleNames)
+            {
+                if (await roleManager.RoleExistsAsync(roleName)) continue;
+                var role = new IdentityRole { Name = roleName };
+                var result = await roleManager.CreateAsync(role);
+
+                if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+            }
+        }
+
+        private static async Task AddToRolesAsync(AppUser admin, string[] roleNames)
+        {
+            if (admin is null) throw new NullReferenceException(nameof(admin));
+
+            foreach (var role in roleNames)
+            {
+                if (await userManager.IsInRoleAsync(admin, role)) continue;
+                var result = await userManager.AddToRoleAsync(admin, role);
+                if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+            }
         }
 
         private static List<Product> GetProducts()
@@ -137,5 +196,7 @@ namespace WebShop.Data
             };
             return categories;
         }
+
+        
     }
 }
