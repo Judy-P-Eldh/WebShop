@@ -13,8 +13,6 @@ namespace WebShop.Data
 
         public static async Task InitAsync(ApplicationDbContext db, IServiceProvider service, string adminPW)
         {
-            if (await db.Products.AnyAsync()) return;
-
             roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
             if (roleManager is null) throw new NullReferenceException(nameof(RoleManager<IdentityRole>));
 
@@ -24,26 +22,31 @@ namespace WebShop.Data
             var roleNames = new[] { "Staff", "Customer" };
             var Email = "admin@admin.se";
 
+            await AddRolesAsync(roleNames);
+            var admin = await AddAdminAsync(Email, adminPW);
+            await AddToRolesAsync(admin, roleNames);
+
+            if (await db.Products.AnyAsync()) return;
+            
             var plants = GetPlantCategory();
             await db.AddRangeAsync(plants);
             size = GetPlantSize();
             await db.AddRangeAsync(size);
             var prod = GetProducts();
             await db.AddRangeAsync(prod);
-            var admin = await AddAdminAsync(Email, adminPW);
-            await AddRolesAsync(roleNames);
-            await AddToRolesAsync(admin, roleNames);
+            
 
             await db.SaveChangesAsync();
         }
 
         private static async Task<AppUser> AddAdminAsync(string Email, string PW)
         {
-            var found = await userManager.FindByEmailAsync(Email);      //FEL
+            var found = await userManager.FindByEmailAsync(Email);     
 
             if (found != null) return null!;
             var admin = new AppUser
             {
+                UserName = Email,
                 RegisterDate = DateTime.Now,
                 Name = "P",
                 Email = "admin@admin.se",
