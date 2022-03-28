@@ -46,20 +46,20 @@ namespace WebShop.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Profile()
-        {
-            if(User.IsInRole("Staff"))
-            {
-                return View();
-            }
-            if(User.IsInRole("Customer"))
-            {
-                RedirectToAction(nameof(Index));
-            }
+        //[Authorize]
+        //public async Task<IActionResult> Profile()
+        //{
+        //    if(User.IsInRole("Staff"))
+        //    {
+        //        return View();
+        //    }
+        //    if(User.IsInRole("Customer"))
+        //    {
+        //        RedirectToAction(nameof(Index));
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
 
     }
 }
