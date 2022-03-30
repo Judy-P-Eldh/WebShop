@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Data;
 using WebShop.Models.Enteties;
@@ -10,17 +11,14 @@ namespace WebShop.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+		private readonly UserManager<AppUser> admin;
+        private readonly ApplicationDbContext db;
 
-        //private readonly OrderRepository orderRepository;
-        //private readonly ProductRepository productRepository;
-        //private readonly ProductOrderRepository productOrderRepository;
-
-        public OrderController(IUnitOfWork unitOfWork)
+		public OrderController(IUnitOfWork unitOfWork, UserManager<AppUser> admin, ApplicationDbContext db)
         {
             this.unitOfWork = unitOfWork;
-            //this.orderRepository = orderRepository;
-            //this.productRepository = productRepository;
-            //this.productOrderRepository = productOrderRepository;
+			this.admin = admin;
+            this.db = db;
         }
         
         public async Task<IActionResult> Index()
@@ -37,6 +35,35 @@ namespace WebShop.Controllers
             }).ToList();
 
             return View(orders);
+        }
+
+        public async Task<IActionResult> Detail() 
+		{
+			if (User.IsInRole("Customer"))
+			{
+                var userId = admin.GetUserId(User);
+                var user = db.Users.Find(userId);
+
+                var orders = unitOfWork.OrderRepository.GetAllOrdersAsync()
+                    .Result
+                    .Where(o => o.AppUserId.ToString() == userId)
+                    .OrderBy(o => o.OrderDate)
+                    .ToList();
+                           
+                
+                var viewModel = new CustomerPageViewModel
+				{
+                    AppUserId = userId,
+                    Name = user.Name,
+                    RegisterDate = user.RegisterDate,
+                    Orders = orders
+
+                };
+
+                return View("CustomerPage", viewModel);
+
+            }
+             return RedirectToAction(nameof(Index));
         }
 
         //public async Task<IActionResult> Create(int id, DateTime orderDate, int totalPrice, int appUserId, List<ProductOrder> productOrders)
@@ -70,7 +97,7 @@ namespace WebShop.Controllers
             {
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
-                //AppUserId = 
+                AppUserId =  admin.GetUserId(User)
             };
             var productOrder = new ProductOrder()
             {
