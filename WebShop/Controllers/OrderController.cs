@@ -11,14 +11,14 @@ namespace WebShop.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
-		private readonly UserManager<AppUser> admin;
-        private readonly ApplicationDbContext db;
+		private readonly UserManager<AppUser> userManager;
+       
 
-		public OrderController(IUnitOfWork unitOfWork, UserManager<AppUser> admin, ApplicationDbContext db)
+		public OrderController(IUnitOfWork unitOfWork, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
-			this.admin = admin;
-            this.db = db;
+			this.userManager = userManager;
+            
         }
         
         public async Task<IActionResult> Index()
@@ -41,15 +41,15 @@ namespace WebShop.Controllers
 		{
 			if (User.IsInRole("Customer"))
 			{
-                var userId = admin.GetUserId(User);
-                var user = db.Users.Find(userId);
+                var userId = userManager.GetUserId(User);
+                //Gör jag samma sak 2ggr här?
+                var user = await unitOfWork.CustomerRepository.GetUserByIdAsync(userId);/*Users.Find(userId)*/
 
                 var orders = unitOfWork.OrderRepository.GetAllOrdersAsync()
                     .Result
                     .Where(o => o.AppUserId.ToString() == userId)
                     .OrderBy(o => o.OrderDate)
                     .ToList();
-                           
                 
                 var viewModel = new CustomerPageViewModel
 				{
@@ -57,7 +57,6 @@ namespace WebShop.Controllers
                     Name = user.Name,
                     RegisterDate = user.RegisterDate,
                     Orders = orders
-
                 };
 
                 return View("CustomerPage", viewModel);
@@ -97,7 +96,7 @@ namespace WebShop.Controllers
             {
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
-                AppUserId =  admin.GetUserId(User)
+                AppUserId =  userManager.GetUserId(User)
             };
             var productOrder = new ProductOrder()
             {

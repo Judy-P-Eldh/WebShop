@@ -9,6 +9,7 @@ namespace WebShop.Repositories
         public IProductRepository ProductRepository { get; }
         public IOrderRepository OrderRepository { get; }
         public IProductOrderRepository ProductOrderRepository { get; }
+        public ICustomerRepository CustomerRepository { get; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -16,6 +17,7 @@ namespace WebShop.Repositories
             ProductRepository = new ProductRepository(db);
             OrderRepository = new OrderRepository(db);
             ProductOrderRepository = new ProductOrderRepository(db);
+            CustomerRepository = new CustomerRepository(db);
         }
         public async Task CompleteAsync()
         {
