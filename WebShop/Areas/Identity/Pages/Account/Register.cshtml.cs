@@ -111,7 +111,6 @@ namespace WebShop.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -128,7 +127,6 @@ namespace WebShop.Areas.Identity.Pages.Account
 
                 user.Name = Input.Name;
                 user.RegisterDate = DateTime.Now;
-               
                                                     
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
