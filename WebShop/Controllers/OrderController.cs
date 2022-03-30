@@ -18,7 +18,6 @@ namespace WebShop.Controllers
         {
             this.unitOfWork = unitOfWork;
 			this.userManager = userManager;
-            
         }
         
         public async Task<IActionResult> Index()
@@ -42,9 +41,8 @@ namespace WebShop.Controllers
 			if (User.IsInRole("Customer"))
 			{
                 var userId = userManager.GetUserId(User);
-                //Gör jag samma sak 2ggr här?
                 var user = await unitOfWork.CustomerRepository.GetUserByIdAsync(userId);/*Users.Find(userId)*/
-
+                
                 var orders = unitOfWork.OrderRepository.GetAllOrdersAsync()
                     .Result
                     .Where(o => o.AppUserId.ToString() == userId)

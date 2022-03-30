@@ -17,7 +17,7 @@ namespace WebShop.Repositories
         public async Task<AppUser> GetUserByIdAsync(string id)
         {
             var user = db.Users.FirstOrDefault(u => u.Id == id);
-            var userOrders = user.Orders.ToList();
+            //var userOrders = user.Orders.ToList();
 
             return user;
         }
