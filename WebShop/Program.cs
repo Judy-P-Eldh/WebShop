@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using WebShop.Clients;
 using WebShop.Data;
 using WebShop.Extensions;
 using WebShop.Models.Enteties;
@@ -33,6 +34,8 @@ builder.Services.AddDefaultIdentity<AppUser>(options => {
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient<WebShopClient>();
 
   var app = builder.Build();
 

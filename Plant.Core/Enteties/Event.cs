@@ -14,6 +14,6 @@ namespace Plant.Core.Enteties
         public DateTime Date { get; set; }
         public Address Address { get; set; }
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();
-        
+         //AddressId?  Inte egen tabell i db
     }
 }

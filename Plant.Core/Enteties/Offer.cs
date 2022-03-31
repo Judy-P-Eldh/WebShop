@@ -13,6 +13,6 @@ namespace Plant.Core.Enteties
         public DateTime StartDate { get; set; }
         public DateTime EndDate => StartDate.AddDays(7);
         public string Description { get; set; }
-        public int Discount { get; set; }  //Ska ju vara en procentsats som dras av priset på produkten som finns i WebShop
+        public int Discount { get; set; } 
     }
 }

@@ -31,7 +31,7 @@ namespace Plant.API.Controllers
         public async Task<ActionResult<IEnumerable<EventDto>>> GetEvent()
         {
             var eventDto =  mapper.Map<IEnumerable<EventDto>>(await db.Event.Include(a => a.Address)
-                                                                            .Include(e => e.Offers)
+                                                                            .Include(e => e.Offers.OrderBy(e => e.StartDate))
                                                                             .OrderBy(e => e.Date)
                                                                             .ToListAsync());
             return Ok(eventDto);
