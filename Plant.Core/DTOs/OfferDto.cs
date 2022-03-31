@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Plant.Core.DTOs
 {
-    internal class OfferDto
+    public class OfferDto
     {
         public string Title { get; set; }
         [Display(Name = "Start Date")]

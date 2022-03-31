@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Plant.API.Extensions;
 using Plant.Data.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PlantAPIContext>(options =>
@@ -16,6 +17,8 @@ builder.Services.AddControllers(opt => opt.ReturnHttpNotAcceptable = true)
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(PlantMappings));
 
 var app = builder.Build();
 

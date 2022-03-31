@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Plant.Data.Data;
 using Plant.Core.Enteties;
+using AutoMapper;
+using Plant.Core.DTOs;
 
 namespace Plant.API.Controllers
 {
@@ -16,17 +18,19 @@ namespace Plant.API.Controllers
     public class EventsController : ControllerBase
     {
         private readonly PlantAPIContext _context;
+        private readonly IMapper mapper;
 
-        public EventsController(PlantAPIContext context)
+        public EventsController(PlantAPIContext db, IMapper mapper)
         {
-            _context = context;
+            _context = db;
+            this.mapper = mapper;
         }
 
         // GET: api/Events
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvent()
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvent()
         {
-            return await _context.Event.Include(a => a.Address).ToListAsync();
+            return await mapper.Map<Event>(EventDto).Include(a => a.Address).ToListAsync();
         }
 
         // GET: api/Events/5

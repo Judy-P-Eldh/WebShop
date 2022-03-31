@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Plant.Core.DTOs
 {
-    internal class EventDto
+    public class EventDto
     {
         public string Title { get; set; }
         public string Description { get; set; }
