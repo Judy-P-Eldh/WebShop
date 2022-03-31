@@ -17,12 +17,12 @@ namespace Plant.API.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
-        private readonly PlantAPIContext _context;
+        private readonly PlantAPIContext db;
         private readonly IMapper mapper;
 
         public EventsController(PlantAPIContext db, IMapper mapper)
         {
-            _context = db;
+            this.db = db;
             this.mapper = mapper;
         }
 
@@ -30,14 +30,15 @@ namespace Plant.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetEvent()
         {
-            return await mapper.Map<Event>(EventDto).Include(a => a.Address).ToListAsync();
+            var eventDto = await mapper.ProjectTo<EventDto>(db.Event).Include(a => a.Address).ToListAsync();
+            return Ok(eventDto);
         }
 
         // GET: api/Events/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEvent(int id)
         {
-            var @event = await _context.Event.FindAsync(id);
+            var @event = await db.Event.FindAsync(id);
 
             if (@event == null)
             {
@@ -57,11 +58,11 @@ namespace Plant.API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(@event).State = EntityState.Modified;
+            db.Entry(@event).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,8 +84,8 @@ namespace Plant.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent(Event @event)
         {
-            _context.Event.Add(@event);
-            await _context.SaveChangesAsync();
+            db.Event.Add(@event);
+            await db.SaveChangesAsync();
 
             return CreatedAtAction("GetEvent", new { id = @event.Id }, @event);
         }
@@ -93,21 +94,21 @@ namespace Plant.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
-            var @event = await _context.Event.FindAsync(id);
+            var @event = await db.Event.FindAsync(id);
             if (@event == null)
             {
                 return NotFound();
             }
 
-            _context.Event.Remove(@event);
-            await _context.SaveChangesAsync();
+            db.Event.Remove(@event);
+            await db.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool EventExists(int id)
         {
-            return _context.Event.Any(e => e.Id == id);
+            return db.Event.Any(e => e.Id == id);
         }
     }
 }
