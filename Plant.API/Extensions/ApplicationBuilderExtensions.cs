@@ -16,7 +16,7 @@ namespace Plant.API.Extensions
 
                 try
                 {
-                    await SeedData.InitAsync(db, serviceProvider);
+                    await SeedData.InitAsync(db);
                 }
                 catch (Exception e)
                 {
