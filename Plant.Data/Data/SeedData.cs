@@ -32,36 +32,32 @@ public class SeedData
 
         for (int i = 0; i < 20; i++)
         {
-            var Title = faker.Company.CompanyName();
-            var Date = faker.Date.Soon();
-            var Description = faker.Company.CatchPhrase();
-            var address = new Address()
+            var oneEvent = new Event()
             {
-                Street = faker.Address.StreetName(),
-                StreetNr = faker.Random.Number(1 - 89),
-                City = faker.Address.City(),
-                PostalCode = faker.Address.ZipCode(),
-
-            };
-
-
-            var oneEvent = new Event(Title, Date, Description, address)
-            {
-                Title = Title,
-                Date = Date,
-                Description = Description,
-                Address = address
+                Title = faker.Company.CompanyName(),
+                Date = faker.Date.Soon(),
+                Description = faker.Company.CatchPhrase(),
+                Address = new Address()
+                {
+                    Street = faker.Address.StreetName(),
+                    StreetNr = faker.Random.Number(1 - 89),
+                    City = faker.Address.City(),
+                    PostalCode = faker.Address.ZipCode(),
+                }
             };
 
             foreach (var e in events)
             {
                 if (faker.Random.Int(0, 5) == 0)
                 {
-                    GetOffer();
+                    for (int x = 0; x < 5; x++)
+                    {
+                        GetOffer();
+                    }
+                    
                 }
             }
             
-
             events.Add(oneEvent);
         }
         
