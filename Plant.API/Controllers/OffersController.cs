@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Plant.Data.Data;
 using Plant.Core.Enteties;
+using AutoMapper;
+using Plant.Core.DTOs;
 
 namespace Plant.API.Controllers
 {
@@ -15,32 +17,36 @@ namespace Plant.API.Controllers
     [ApiController]
     public class OffersController : ControllerBase
     {
-        private readonly PlantAPIContext _context;
+        private readonly PlantAPIContext db;
+        private readonly IMapper mapper;
 
-        public OffersController(PlantAPIContext context)
+        public OffersController(PlantAPIContext db, IMapper mapper)
         {
-            _context = context;
+            this.db = db;
+            this.mapper = mapper;
         }
 
         // GET: api/Offers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Offer>>> GetOffer()
+        public async Task<ActionResult<IEnumerable<OfferDto>>> GetOffer()
         {
-            return await _context.Offer.ToListAsync();
+            var offerDto = mapper.Map<IEnumerable<OfferDto>>(await db.Offer.OrderBy(e => e.StartDate).ToListAsync());
+            return Ok(offerDto);
         }
 
         // GET: api/Offers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Offer>> GetOffer(int id)
+        public async Task<ActionResult<OfferDto>> GetOffer(int id)
         {
-            var offer = await _context.Offer.FindAsync(id);
+            var offer = mapper.Map<IEnumerable<OfferDto>>(await db.Offer.FirstOrDefaultAsync(e => e.Id == id));
 
             if (offer == null)
             {
                 return NotFound();
             }
+            var offerDto = mapper.Map<OfferDto>(offer);
 
-            return offer;
+            return offerDto;
         }
 
         // PUT: api/Offers/5
@@ -53,11 +59,11 @@ namespace Plant.API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(offer).State = EntityState.Modified;
+            db.Entry(offer).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,8 +85,8 @@ namespace Plant.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Offer>> PostOffer(Offer offer)
         {
-            _context.Offer.Add(offer);
-            await _context.SaveChangesAsync();
+            db.Offer.Add(offer);
+            await db.SaveChangesAsync();
 
             return CreatedAtAction("GetOffer", new { id = offer.Id }, offer);
         }
@@ -89,21 +95,21 @@ namespace Plant.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOffer(int id)
         {
-            var offer = await _context.Offer.FindAsync(id);
+            var offer = await db.Offer.FindAsync(id);
             if (offer == null)
             {
                 return NotFound();
             }
 
-            _context.Offer.Remove(offer);
-            await _context.SaveChangesAsync();
+            db.Offer.Remove(offer);
+            await db.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool OfferExists(int id)
         {
-            return _context.Offer.Any(e => e.Id == id);
+            return db.Offer.Any(e => e.Id == id);
         }
     }
 }

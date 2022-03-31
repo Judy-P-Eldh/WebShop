@@ -30,22 +30,27 @@ namespace Plant.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetEvent()
         {
-            var eventDto = await mapper.ProjectTo<EventDto>(db.Event).Include(a => a.Address).ToListAsync();
+            var eventDto =  mapper.Map<IEnumerable<EventDto>>(await db.Event.Include(a => a.Address)
+                                                                            .Include(e => e.Offers)
+                                                                            .OrderBy(e => e.Date)
+                                                                            .ToListAsync());
             return Ok(eventDto);
         }
 
         // GET: api/Events/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEvent(int id)
+        public async Task<ActionResult<EventDto>> GetEvent(int id)
         {
-            var @event = await db.Event.FindAsync(id);
+            var @event = await db.Event.Include(e => e.Address).Include(e => e.Offers).FirstOrDefaultAsync(e => e.Id == id);
 
             if (@event == null)
             {
                 return NotFound();
             }
 
-            return @event;
+            var eventDto = mapper.Map<EventDto>(@event);
+           
+            return eventDto;
         }
 
         // PUT: api/Events/5

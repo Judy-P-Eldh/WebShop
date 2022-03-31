@@ -9,6 +9,7 @@ namespace Plant.Core.DTOs
 {
     public class OfferDto
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
