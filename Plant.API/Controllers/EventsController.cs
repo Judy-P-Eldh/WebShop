@@ -41,7 +41,7 @@ namespace Plant.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EventDto>> GetEvent(int id)
         {
-            var @event = await db.Event.Include(e => e.Address).Include(e => e.Offers).FirstOrDefaultAsync(e => e.Id == id);
+            var @event = await db.Event.Include(e => e.Address).Include(e => e.Offers.OrderBy(e => e.StartDate)).FirstOrDefaultAsync(e => e.Id == id);
 
             if (@event == null)
             {
