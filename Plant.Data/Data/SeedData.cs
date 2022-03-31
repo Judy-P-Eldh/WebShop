@@ -14,61 +14,55 @@ public class SeedData
 
         faker = new Faker("sv");
 
-        var offers = GetOffer();
-        await db.AddRangeAsync(offers);
+        //var offers = GetOffer(5);
+        //await db.AddRangeAsync(offers);
 
-        //var events = GetEvent();
-        //await db.AddRangeAsync(events);
+        var events = GetEvent();
+        await db.AddRangeAsync(events);
 
         await db.SaveChangesAsync();
     }
 
-    //private static IEnumerable<Event> GetEvent()
-    //{
-    //    var events = new List<Event>();
-
-    //    for (int i = 0; i < 5; i++)
-    //    {
-    //        var oneEvent = new Event()
-    //        {
-    //            Title = faker.Company.CompanyName(),
-    //            Date = faker.Date.Soon(),
-    //            Description = faker.Company.CatchPhrase(),
-    //            Address = new Address()
-    //            {
-    //                Street = faker.Address.StreetName(),
-    //                StreetNr = faker.Random.Number(200),
-    //                City = faker.Address.City(),
-    //                PostalCode = faker.Address.ZipCode(),
-    //            }
-    //        };
-
-    //        foreach (var e in events)
-    //        {
-    //            var rnd = faker.Random.Int(1 - 5);
-    //            for (int x = 0; x < rnd; x++)
-    //            {
-    //                GetOffer();
-    //            }
-    //        }
-
-    //        events.Add(oneEvent);
-    //    }
-
-    //    return events;
-    //}
-
-    private static List<Offer> GetOffer()
+    private static IEnumerable<Event> GetEvent()
     {
-        var offers = new List<Offer>();
+        var events = new List<Event>();
+
         for (int i = 0; i < 5; i++)
+        {
+            var oneEvent = new Event()
+            {
+                Title = faker.Commerce.ProductName(),
+                Date = faker.Date.Soon(),
+                Description = faker.Company.CatchPhrase(),
+                Address = new Address()
+                {
+                    Street = faker.Address.StreetName(),
+                    StreetNr = faker.Random.Number(200),
+                    City = faker.Address.City(),
+                    PostalCode = faker.Address.ZipCode(),
+                },
+
+                Offers = GetOffer(faker.Random.Int(0, 5))
+            };
+
+            events.Add(oneEvent);
+        }
+
+        return events;
+    }
+
+    private static List<Offer> GetOffer(int n)
+    {
+        var rnd = new Random();
+        var offers = new List<Offer>();
+        for (int i = 0; i < n; i++)
         {
             var offer = new Offer()
             {
                 Title = faker.Commerce.Department(),
                 Description = faker.Commerce.ProductDescription(),
-                StartDate = faker.Date.Soon(), 
-                Discount = faker.Random.Int(11 - 75)
+                StartDate = faker.Date.Soon(),
+                Discount = rnd.Next(0, 76)
             };
             offers.Add(offer);
         }

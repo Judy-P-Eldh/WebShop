@@ -26,7 +26,7 @@ namespace Plant.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Event>>> GetEvent()
         {
-            return await _context.Event.ToListAsync();
+            return await _context.Event.Include(a => a.Address).ToListAsync();
         }
 
         // GET: api/Events/5
