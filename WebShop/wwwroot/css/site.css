@@ -2,11 +2,11 @@ html {
     font-size: 14px;
 }
 
-/*@media (min-width: 768px) {
+@media (min-width: 768px) {
     html {
         font-size: 16px;
     }
-}*/
+}
 
 html {
     position: relative;
@@ -43,6 +43,7 @@ body {
 
 .card-img-top {
     height: 30%;
+    width: 100%
 }
 
 /*.card-body {
@@ -80,8 +81,60 @@ body {
         border-color: #AC8383;
     }
 
-/*.container {
-    justify-content: flex-start;
+#transactions {
     width: 100%;
+    height: 45rem;
+    /*position: absolute;*/
+    overflow-y: hidden;
+    overflow-y: scroll;
+}
+
+#payment {
+    width: 100%;
+}
+
+#offers {
     gap: 1rem;
-}*/
+}
+
+.message {
+    width: 100%;
+    margin-top: 10rem;
+}
+
+#messageBox {
+    width: 80%;
+    height: 30rem;
+   
+   
+    border: solid;
+    
+    border-color: #442121;
+    padding: 1.5rem;
+    
+    overflow-y: hidden;
+    overflow-y: scroll;
+}
+
+#person {
+   width: 100%; 
+}
+
+#customerPage {
+    width: 100%;
+    gap: 2.5rem;
+   /* justify-content: flex-start;*/
+    display: inline-flex;
+}
+
+#flexSwitchCheckDefault {
+    border-color: #442121;
+    background-color: #d4bfbf;
+}
+
+    #flexSwitchCheckDefault:checked {
+        background-color: #442121;
+        border: #d4bfbf;
+    }
+
+

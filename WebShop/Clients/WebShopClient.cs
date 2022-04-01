@@ -42,7 +42,7 @@ namespace WebShop.Clients
 
         public async Task<IEnumerable<Offer>> GetOffersStreamsAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/events");
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/offers");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             IEnumerable<Offer> offers;

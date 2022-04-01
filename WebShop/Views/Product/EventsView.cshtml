@@ -17,12 +17,44 @@
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">@e.Title </h5>
-				<p class="card-text">@e.Description 
-					<p>Date: @e.Date</p>
-					<p>Address: @e.Address.City</p>
+				<p class="card-text">@e.Description</p>
+				<p>Date: @e.Date</p>
+				<p>Address: @e.Address.City</p>
+
 				<a asp-controller="Product" asp-action="Index" class="btn btn-primary">To Webshop</a>
-				<a asp-controller="Product" asp-action="OffersView" class="btn btn-primary">See Offers</a>	
+				<a asp-route-id="@e.Id" asp-action="OffersView" class="btn btn-primary">See Offers</a>
+
+				<div id="eventOffers">
+					@foreach (var item in e.Offers)
+					{
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="flush-headingOne">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+									@item.Title
+								</button>
+							</h2>
+							<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+								<div class="accordion-body">
+									<p>@item.Description</p>
+									@item.StartDate
+									@item.EndDate)
+									@item.Discount)
+									<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+									<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+									<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+
+								</div>
+							</div>
+						</div>
+					}
+
+				</div>
+
 			</div>
+			<div>
+				@*infoga en annan view?*@
+			</div>
+
 		</div>
 	}
 </div>
