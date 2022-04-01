@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Plant.Core.DTOs;
 using WebShop.Clients;
 using WebShop.Data;
 using WebShop.Models.Enteties;
@@ -38,9 +39,19 @@ namespace WebShop.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> GetEvents()
+        public async Task<IActionResult> EventsView()
         {
             var events = await webShopClient.GetEventSreamsAsync();
+            var view = events.Select(e => new EventDto
+            {
+                Title = e.Title,
+                Description = e.Description,
+                Date = e.Date,
+                Address = e.Address,
+                Offers =  e.Offers
+
+            }).ToList();
+            return View(view);
 
         }
 

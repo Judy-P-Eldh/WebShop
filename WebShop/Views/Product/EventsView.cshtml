@@ -1,0 +1,30 @@
+﻿@using Plant.Core.DTOs
+@model IEnumerable<EventDto>
+
+@{
+	ViewData["Title"] = "Event";
+}
+
+<div>
+	<h1>Events</h1>
+	<p>Attend events and their special offers.</p>
+</div>
+
+
+<div id="eventCard" class="container-fluid row row-cols-3">
+	@foreach (var e in Model)
+	{
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">@e.Title </h5>
+				<p class="card-text">@e.Description 
+					<p>Date: @e.Date</p>
+					<p>Address: @e.Address.City</p>
+				<a asp-controller="Product" asp-action="Index" class="btn btn-primary">To Webshop</a>
+				<a asp-controller="Product" asp-action="Offers" asp-route-id="@e.Id" class="btn btn-primary">See Offers</a>	
+			</div>
+		</div>
+	}
+</div>
+
+

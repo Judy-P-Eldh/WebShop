@@ -27,6 +27,12 @@ body {
     /*flex-wrap: wrap;*/
 }
 
+#eventCard {
+    gap: 1rem;
+    display: flex;
+    height: 100%;
+}
+
 .card {
     width: 20%;
     display: flex;
