@@ -52,7 +52,21 @@ namespace WebShop.Controllers
 
             }).ToList();
             return View(view);
+        }
 
+        public async Task<IActionResult> OffersView()
+		{
+            var offers = await webShopClient.GetOffersStreamsAsync();
+            var view = offers.Select(e => new OfferDto
+            {
+                Title = e.Title,
+                Description = e.Description,
+                StartDate = e.StartDate,
+               
+                Discount = e.Discount
+
+            }).ToList();
+            return View(view);
         }
 
         //[Authorize]
