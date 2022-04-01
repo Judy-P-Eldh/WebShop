@@ -41,7 +41,7 @@ namespace WebShop.Controllers
 
         public async Task<IActionResult> EventsView()
         {
-            var events = await webShopClient.GetEventSreamsAsync();
+            var events = await webShopClient.GetEventStreamsAsync();
             var view = events.Select(e => new EventDto
             {
                 Title = e.Title,

@@ -17,7 +17,7 @@ namespace WebShop.Clients
             this.httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<Event>> GetEventSreamsAsync() 
+        public async Task<IEnumerable<Event>> GetEventStreamsAsync() 
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "api/events");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -38,6 +38,29 @@ namespace WebShop.Clients
                 }
             }
             return events;
+        }
+
+        public async Task<IEnumerable<Offer>> GetOffersStreamsAsync()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/events");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            IEnumerable<Offer> offers;
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
+
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            {
+                response.EnsureSuccessStatusCode();
+                using (var streamReader = new StreamReader(stream))
+                {
+                    using (var jsonReader = new JsonTextReader(streamReader))
+                    {
+                        var serializer = new JsonSerializer();
+                        offers = serializer.Deserialize<IEnumerable<Offer>>(jsonReader);
+                    }
+                }
+            }
+            return offers;
         }
     }
 }
