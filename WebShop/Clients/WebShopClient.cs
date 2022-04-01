@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Plant.Core.Enteties;
 using System.Net.Http.Headers;
-using WebShop.Models;
+
 
 namespace WebShop.Clients
 {
@@ -10,13 +11,13 @@ namespace WebShop.Clients
 
         public WebShopClient(HttpClient httpClient)
         {
-            httpClient.BaseAddress = new Uri("");
+            httpClient.BaseAddress = new Uri("http://localhost:5138");
+            httpClient.DefaultRequestHeaders.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //Clear headers etc.
             this.httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<Event>> GetEventSreamsAsync()
+        public async Task<IEnumerable<Event>> GetEventSreamsAsync() 
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "api/events");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -31,7 +32,7 @@ namespace WebShop.Clients
                 {
                     using (var jsonReader = new JsonTextReader(streamReader))
                     {
-                        var serializer = new Newtonsoft.Json.JsonSerializer();
+                        var serializer = new JsonSerializer();
                         events = serializer.Deserialize<IEnumerable<Event>>(jsonReader);
                     }
                 }

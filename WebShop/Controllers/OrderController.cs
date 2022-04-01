@@ -41,7 +41,7 @@ namespace WebShop.Controllers
 			if (User.IsInRole("Customer"))
 			{
                 var userId = userManager.GetUserId(User);
-                var user = await unitOfWork.CustomerRepository.GetUserByIdAsync(userId);/*Users.Find(userId)*/
+                var user = await unitOfWork.CustomerRepository.GetUserByIdAsync(userId);
                 
                 var orders = unitOfWork.OrderRepository.GetAllOrdersAsync()
                     .Result
@@ -62,20 +62,6 @@ namespace WebShop.Controllers
             }
              return RedirectToAction(nameof(Index));
         }
-
-        //public async Task<IActionResult> Create(int id, DateTime orderDate, int totalPrice, int appUserId, List<ProductOrder> productOrders)
-        //{
-        //    var viewModel = new OrderViewModel();
-        //    db.Add(new Order()
-        //    {
-        //        OrderDate = orderDate,
-        //        TotalPrice = totalPrice,
-        //        AppUserId = appUserId,
-        //        ProductOrders = productOrders
-        //    });
-
-        //    return View(viewModel);
-        //}
 
         public async Task<IActionResult> Buy(int? id, int amount)
         {

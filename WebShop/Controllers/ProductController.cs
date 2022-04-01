@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebShop.Clients;
 using WebShop.Data;
 using WebShop.Models.Enteties;
 using WebShop.Models.ViewModels;
@@ -11,25 +12,16 @@ namespace WebShop.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly WebShopClient webShopClient;
 
-        //private readonly ProductRepository productRepository;
-        //private readonly ProductOrderRepository productOrderRepository;
-        //private readonly OrderRepository orderRepository;
-
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork, WebShopClient webShopClient)
         {
             this.unitOfWork = unitOfWork;
-            //this.productRepository = productRepository;
-            //this.productOrderRepository = productOrderRepository;
-            //this.orderRepository = orderRepository;
+            this.webShopClient = webShopClient;
         }
 
         public async Task<IActionResult> Index()
         {
-            //if (User.IsInRole("Staff"))
-            //{
-
-            //}
             var products = await unitOfWork.ProductRepository.GetAllProductsAsync();
             var viewModel = products.Select(p => new ProductViewModel 
             {
@@ -44,6 +36,12 @@ namespace WebShop.Controllers
            }).ToList();
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> GetEvents()
+        {
+            var events = await webShopClient.GetEventSreamsAsync();
+
         }
 
         //[Authorize]
