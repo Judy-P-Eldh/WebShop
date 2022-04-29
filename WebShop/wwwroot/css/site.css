@@ -137,4 +137,10 @@ body {
         border: #d4bfbf;
     }
 
+.activeEvent {
+    visibility: visible;
+}
 
+.inactiveEvent {
+    visibility: hidden;
+}
