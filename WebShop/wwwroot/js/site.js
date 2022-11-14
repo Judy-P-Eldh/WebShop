@@ -7,3 +7,7 @@ function chooseAmount() {
     let amount = document.getElementById('plantAmount').innerHTML;
     let choose = document.getElementById('plantAmountRange').innerHTML;
 }
+
+function updateTextInput(val) {
+    document.getElementById('textInput').value = val;
+}

@@ -13,28 +13,91 @@
 	<a class="btn btn-primary m-1" asp-controller="Product" asp-action="EventsView">See Event</a>
 </div>
 
-<div id="shopItems" class="container-fluid row ">
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Image)
+
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Description)
+
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Category)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Size)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Price)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var plant in Model)
+		{
+			<tr>
+				<td>
+					<img src="@plant.Image" class="card-img-top" alt="plant">
+				</td>
+				<td class="p-2">
+					<h5 class="card-title">@plant.Title </h5>
+					<p class="card-text">@plant.Description</p>
+				</td>
+				<td>
+					<p>@plant.Category.Name.</p>
+
+				</td>
+				<td>
+					<p> @plant.Size.Size.</p>
+				</td>
+				<td>
+					<p id="plantPrice">@plant.Price kr.</p>
+				</td>
+				<td>
+@*					Varför blir det samma på alla?
+*@					<form>	
+						<label for="amountRange" class="form-label">Amount</label>
+						<input type="range" name="amountRange" class="form-range" min="0" max="5" value="" step="1" id="plantAmountRange" onchange="updateTextInput(this.value); @plant.Id">
+						<input class="mb-3" type="text" id="textInput" value="">
+						<a type="submit" asp-controller="Order" asp-action="Buy" asp-route-id="@plant.Id" class="btn btn-primary mb-3">Add to cart</a>
+					</form>
+					<a class="btn btn-primary" asp-controller="Product" asp-action="Index">Continue shopping</a>
+				</td>
+
+			</tr>
+		}
+	</tbody>
+</table>
+
+@*
+<div id="shopItems" class="container-fluid d-flex row">
 	@foreach (var plant in Model)
 	{
+
 		<div class="card">
 			<img src="@plant.Image" class="card-img-top" alt="plant">
 			<div class="card-body">
-				
+
 				<h5 class="card-title">@plant.Title </h5>
 				<p class="card-text">@plant.Description</p>
 			</div>
-				<div id="cardBottom">
-					<p>Category: @plant.Category.Name.<br /> Size: @plant.Size.Size.</p>
-					<p id="plantPrice">@plant.Price kr.</p>
-					<label for="amountRange" class="form-label">Amount</label>
-					<label id="plantAmount">1</label>
-					<input id="plantAmountRange" type="range" class="form-range" min="1" max="5" step="0.5">
-					<a asp-controller="Order" asp-action="Buy" asp-route-id="@plant.Id" class="btn btn-primary">Add to cart</a>
-					<a class="btn btn-primary" asp-controller="Product" asp-action="Index">Continue shopping</a>
-				</div>
-			
+			<div id="cardBottom">
+				<p>Category: @plant.Category.Name.<br /> Size: @plant.Size.Size.</p>
+				<p id="plantPrice">@plant.Price kr.</p>
+				<label for="amountRange" class="form-label">Amount</label>
+				<label id="plantAmount">1</label>
+				<input id="plantAmountRange" type="range" class="form-range" min="1" max="5" step="0.5">
+				<a asp-controller="Order" asp-action="Buy" asp-route-id="@plant.Id" class="btn btn-primary">Add to cart</a>
+				<a class="btn btn-primary" asp-controller="Product" asp-action="Index">Continue shopping</a>
+			</div>
+
 		</div>
+
 	}
-</div>
+</div>*@
 
 
